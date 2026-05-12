@@ -104,10 +104,10 @@ export default function CartOverlay() {
 
                 <button
                   type="button"
-                  className="mt-6 w-full rounded bg-gray-900 py-3 text-white"
-                  disabled
+                  className="mt-6 w-full rounded bg-gray-900 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-gray-800"
+                  onClick={() => navigate("/checkout")}
                 >
-                  Continue to Checkout
+                  Continue to checkout
                 </button>
               </div>
             </>

@@ -93,9 +93,14 @@ export default function Cart() {
                 {formatMoney(subtotalCents)}
               </span>
             </div>
-            <p className="mt-2 text-xs text-gray-500">
-              Checkout is not connected yet — this cart is stored in your
-              browser only.
+            <Link
+              to="/checkout"
+              className="mt-6 inline-flex w-full items-center justify-center rounded bg-gray-900 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-gray-800"
+            >
+              Proceed to checkout
+            </Link>
+            <p className="mt-3 text-center text-xs text-gray-500">
+              Cart is saved in this browser only.
             </p>
           </div>
         </>

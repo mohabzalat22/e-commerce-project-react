@@ -123,4 +123,44 @@ export const fetchStorefrontHome = async () => {
   return unwrapData(response.data);
 };
 
+export type PlaceOrderShipping = {
+  email: string;
+  full_name: string;
+  address_line1: string;
+  city: string;
+  postal_code: string;
+};
+
+export type PlaceOrderLine = {
+  product_id: number;
+  name: string;
+  image_url: string;
+  unit_price_cents: number;
+  quantity: number;
+  size_label: string;
+  color_label: string;
+};
+
+export type PlaceOrderPayload = {
+  shipping: PlaceOrderShipping;
+  lines: PlaceOrderLine[];
+};
+
+export type PlacedOrder = {
+  id: string;
+  subtotal_cents: number;
+  shipping_cents: number;
+  total_cents: number;
+};
+
+export const placeOrder = async (
+  payload: PlaceOrderPayload,
+): Promise<PlacedOrder> => {
+  const response = await apiClient.post<ApiEnvelope<PlacedOrder>>(
+    "/orders",
+    payload,
+  );
+  return unwrapData(response.data);
+};
+
 export default apiClient;

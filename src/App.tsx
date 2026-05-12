@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import PLP from "./pages/PLP";
 import PDP from "./pages/PDP";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import AdminLayout from "./admin/AdminLayout";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import CategoriesAdmin from "./admin/pages/CategoriesAdmin";
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/products" element={<PLP />} />
                   <Route path="/product/:id" element={<PDP />} />
                   <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
                 </Routes>
               </Layout>
             </CartProvider>
