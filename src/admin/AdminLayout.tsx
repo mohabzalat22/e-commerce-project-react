@@ -36,6 +36,9 @@ export default function AdminLayout() {
             <NavLink to="/admin/users" className={linkClass}>
               Users
             </NavLink>
+            <NavLink to="/admin/orders" className={linkClass}>
+              Orders
+            </NavLink>
           </nav>
           <div className="hidden sm:block mt-auto pt-6 border-t border-gray-200">
             <NavLink

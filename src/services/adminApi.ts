@@ -1,9 +1,11 @@
-import apiClient, { unwrapData, type ApiEnvelope } from "./api";
+import apiClient, { unwrapData, type ApiEnvelope, type PlaceOrderPayload, type PlacedOrder } from "./api";
 import type {
   AdminCategory,
   AdminCategoryListPayload,
   AdminEavAttribute,
   AdminEavOption,
+  AdminOrder,
+  AdminOrderListPayload,
   AdminProduct,
   AdminProductEavRow,
   AdminProductImage,
@@ -243,4 +245,44 @@ export async function adminDeleteEavOption(
 
 export async function adminFetchUsers(): Promise<AdminUserListPayload> {
   return get<AdminUserListPayload>("/users");
+}
+
+export async function adminFetchOrders(): Promise<AdminOrderListPayload> {
+  return get<AdminOrderListPayload>("/orders");
+}
+
+export async function adminFetchOrder(id: string): Promise<AdminOrder> {
+  return get<AdminOrder>(`/orders/${encodeURIComponent(id)}`);
+}
+
+export async function adminUpdateOrder(
+  id: string,
+  body: Partial<{
+    email: string;
+    full_name: string;
+    address_line1: string;
+    city: string;
+    postal_code: string;
+    status: string;
+  }>,
+): Promise<AdminOrder> {
+  const res = await apiClient.put<ApiEnvelope<AdminOrder>>(
+    `/orders/${encodeURIComponent(id)}`,
+    body,
+  );
+  return unwrapData(res.data);
+}
+
+export async function adminDeleteOrder(id: string): Promise<void> {
+  await del(`/orders/${encodeURIComponent(id)}`);
+}
+
+export async function adminCreateOrder(
+  payload: PlaceOrderPayload,
+): Promise<PlacedOrder> {
+  const res = await apiClient.post<ApiEnvelope<PlacedOrder>>(
+    "/orders",
+    payload,
+  );
+  return unwrapData(res.data);
 }

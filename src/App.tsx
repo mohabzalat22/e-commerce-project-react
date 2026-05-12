@@ -14,6 +14,8 @@ import ProductsAdmin from "./admin/pages/ProductsAdmin";
 import ProductEditor from "./admin/pages/ProductEditor";
 import AttributesAdmin from "./admin/pages/AttributesAdmin";
 import UsersAdmin from "./admin/pages/UsersAdmin";
+import OrdersAdmin from "./admin/pages/OrdersAdmin";
+import OrderEditor from "./admin/pages/OrderEditor";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route path="products/:id" element={<ProductEditor />} />
           <Route path="attributes" element={<AttributesAdmin />} />
           <Route path="users" element={<UsersAdmin />} />
+          <Route path="orders" element={<OrdersAdmin />} />
+          <Route path="orders/:id" element={<OrderEditor />} />
         </Route>
         <Route
           path="/*"

@@ -85,3 +85,38 @@ export type AdminUserListPayload = {
   items: AdminUser[];
   count: number;
 };
+
+export type AdminOrderItem = {
+  id: number;
+  order_id: string;
+  product_id: number;
+  name: string;
+  image_url: string;
+  unit_price_cents: number;
+  quantity: number;
+  size_label: string;
+  color_label: string;
+  line_total_cents: number;
+};
+
+export type AdminOrder = {
+  id: string;
+  email: string;
+  full_name: string;
+  address_line1: string;
+  city: string;
+  postal_code: string;
+  subtotal_cents: number;
+  shipping_cents: number;
+  total_cents: number;
+  status?: string;
+  created_at?: string | null;
+  updated_at?: string | null;
+  items_count?: number;
+  items?: AdminOrderItem[];
+};
+
+export type AdminOrderListPayload = {
+  items: AdminOrder[];
+  count: number;
+};

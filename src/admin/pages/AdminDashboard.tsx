@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import {
   adminFetchCategories,
   adminFetchEavAttributes,
+  adminFetchOrders,
   adminFetchProducts,
   adminFetchUsers,
 } from "../../services/adminApi";
@@ -14,18 +15,21 @@ export default function AdminDashboard() {
     products: number;
     attributes: number;
     users: number;
+    orders: number;
   } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const [cats, products, attrs, usersPayload] = await Promise.all([
-          adminFetchCategories(true),
-          adminFetchProducts(),
-          adminFetchEavAttributes(),
-          adminFetchUsers(),
-        ]);
+        const [cats, products, attrs, usersPayload, ordersPayload] =
+          await Promise.all([
+            adminFetchCategories(true),
+            adminFetchProducts(),
+            adminFetchEavAttributes(),
+            adminFetchUsers(),
+            adminFetchOrders(),
+          ]);
         if (cancelled) {
           return;
         }
@@ -34,6 +38,7 @@ export default function AdminDashboard() {
           products: products.length,
           attributes: attrs.length,
           users: usersPayload.count,
+          orders: ordersPayload.count,
         });
       } catch (e) {
         if (!cancelled) {
@@ -57,6 +62,7 @@ export default function AdminDashboard() {
     { label: "Products", value: counts.products, to: "/admin/products" },
     { label: "EAV attributes", value: counts.attributes, to: "/admin/attributes" },
     { label: "Users", value: counts.users, to: "/admin/users" },
+    { label: "Orders", value: counts.orders, to: "/admin/orders" },
   ];
 
   return (
@@ -67,7 +73,7 @@ export default function AdminDashboard() {
       <p className="mt-1 text-gray-600 text-sm">
         Overview of catalog entities backed by your ecom API.
       </p>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {cards.map((c) => (
           <Link
             key={c.label}
