@@ -1,8 +1,8 @@
-import type { Product } from "../../../data/plp";
+import type { PlProduct } from "../../../types/catalog";
 import ProductCard from "./ProductCard";
 
 type ProductGridProps = {
-  products: Product[];
+  products: PlProduct[];
 };
 
 export default function ProductGrid({ products }: ProductGridProps) {

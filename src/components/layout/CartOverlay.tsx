@@ -1,9 +1,18 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
+
+function formatMoney(cents: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(cents / 100);
+}
 
 export default function CartOverlay() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { lines, subtotalCents, setQuantity } = useCart();
 
   const open = location.pathname === "/cart";
 
@@ -13,15 +22,17 @@ export default function CartOverlay() {
     <div className="fixed inset-0 z-40 flex">
       <button
         aria-label="Close cart"
+        type="button"
         onClick={() => navigate(-1)}
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm z-40"
+        className="absolute inset-0 z-40 bg-black/40 backdrop-blur-sm"
       />
 
-      <aside className="ml-auto w-full max-w-md h-full bg-white shadow-xl overflow-auto relative z-50">
+      <aside className="relative z-50 ml-auto h-full w-full max-w-md overflow-auto bg-white shadow-xl">
         <div className="p-6">
           <div className="flex items-start justify-between">
             <h2 className="text-lg font-semibold">Your Cart</h2>
             <button
+              type="button"
               onClick={() => navigate(-1)}
               aria-label="Close"
               className="text-gray-600 hover:text-gray-900"
@@ -30,58 +41,77 @@ export default function CartOverlay() {
             </button>
           </div>
 
-          <div className="mt-6 space-y-6">
-            <div className="flex gap-4 items-start">
-              <img
-                src="/static/images/product-placeholder.png"
-                alt="product"
-                className="w-16 h-16 object-cover rounded"
-              />
-              <div className="flex-1">
-                <div className="text-sm font-medium">
-                  The Organic Cotton Long-Sleeve
+          {lines.length === 0 ? (
+            <p className="mt-8 text-sm text-gray-600">
+              Your cart is empty.{" "}
+              <Link to="/products" className="underline" onClick={() => navigate(-1)}>
+                Shop products
+              </Link>
+            </p>
+          ) : (
+            <>
+              <div className="mt-6 space-y-6">
+                {lines.map((line) => (
+                  <div key={line.key} className="flex gap-4 items-start">
+                    <img
+                      src={line.imageUrl}
+                      alt=""
+                      className="h-16 w-16 rounded object-cover"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium">{line.name}</div>
+                      <div className="text-xs text-gray-500">
+                        {line.sizeLabel} | {line.colorLabel}
+                      </div>
+                      <div className="text-sm font-semibold mt-2">
+                        {formatMoney(line.unitPriceCents)}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        className="w-7 h-7 border rounded"
+                        onClick={() =>
+                          setQuantity(line.key, line.quantity - 1)
+                        }
+                      >
+                        −
+                      </button>
+                      <div>{line.quantity}</div>
+                      <button
+                        type="button"
+                        className="w-7 h-7 border rounded"
+                        onClick={() =>
+                          setQuantity(line.key, line.quantity + 1)
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 border-t pt-6">
+                <div className="flex justify-between items-center">
+                  <div className="text-sm text-gray-600">
+                    Subtotal ({lines.reduce((n, l) => n + l.quantity, 0)} items)
+                  </div>
+                  <div className="text-lg font-semibold">
+                    {formatMoney(subtotalCents)}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500">Medium | Black</div>
-                <div className="text-sm font-semibold mt-2">$95</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button className="w-7 h-7 border rounded">-</button>
-                <div>1</div>
-                <button className="w-7 h-7 border rounded">+</button>
-              </div>
-            </div>
 
-            <div className="flex gap-4 items-start">
-              <img
-                src="/static/images/product-placeholder.png"
-                alt="product"
-                className="w-16 h-16 object-cover rounded"
-              />
-              <div className="flex-1">
-                <div className="text-sm font-medium">
-                  The Rewool® Oversized Shirt Jacket
-                </div>
-                <div className="text-xs text-gray-500">Small | Black</div>
-                <div className="text-sm font-semibold mt-2">$107</div>
+                <button
+                  type="button"
+                  className="mt-6 w-full rounded bg-gray-900 py-3 text-white"
+                  disabled
+                >
+                  Continue to Checkout
+                </button>
               </div>
-              <div className="flex items-center gap-2">
-                <button className="w-7 h-7 border rounded">-</button>
-                <div>1</div>
-                <button className="w-7 h-7 border rounded">+</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 border-t pt-6">
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-gray-600">Subtotal (2 items)</div>
-              <div className="text-lg font-semibold">$202</div>
-            </div>
-
-            <button className="mt-6 w-full bg-gray-900 text-white py-3 rounded">
-              Continue to Checkout
-            </button>
-          </div>
+            </>
+          )}
         </div>
       </aside>
     </div>

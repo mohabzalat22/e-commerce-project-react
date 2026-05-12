@@ -4,51 +4,68 @@ import AddToCartButton from "./AddToCartButton";
 import InfoBlocks from "./InfoBlocks";
 import ProductDescription from "./ProductDescription";
 
+interface Color {
+  name: string;
+  value: string;
+}
+
 interface ProductInfoProps {
+  title: string;
+  subtitle: string;
+  priceFormatted: string;
+  colors: Color[];
+  sizes: string[];
   selectedSize: string;
   onSizeChange: (size: string) => void;
   selectedColor: string;
   onColorChange: (color: string) => void;
   onAddToCart?: () => void;
+  description: string;
+  careText: string;
 }
 
 export default function ProductInfo({
+  title,
+  subtitle,
+  priceFormatted,
+  colors,
+  sizes,
   selectedSize,
   onSizeChange,
   selectedColor,
   onColorChange,
   onAddToCart,
+  description,
+  careText,
 }: ProductInfoProps) {
   return (
     <div className="lg:sticky top-10 h-fit space-y-6">
-      {/* Title */}
       <div>
-        <h1 className="text-2xl font-medium tracking-wide">CHECK OVERSHIRT</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Relaxed fit cotton blend overshirt
-        </p>
+        <h1 className="text-2xl font-medium tracking-wide uppercase">{title}</h1>
+        {subtitle ? (
+          <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
+        ) : null}
       </div>
 
-      {/* Price */}
-      <p className="text-lg font-medium">$129.00</p>
+      <p className="text-lg font-medium">{priceFormatted}</p>
 
-      {/* Color Selector */}
       <ColorSelector
+        colors={colors}
         selectedColor={selectedColor}
         onColorChange={onColorChange}
       />
 
-      {/* Size Selector */}
-      <SizeSelector selectedSize={selectedSize} onSizeChange={onSizeChange} />
+      <SizeSelector
+        sizes={sizes}
+        selectedSize={selectedSize}
+        onSizeChange={onSizeChange}
+      />
 
-      {/* Add to Cart Button */}
       <AddToCartButton onClick={onAddToCart} />
 
-      {/* Info Blocks */}
       <InfoBlocks />
 
-      {/* Description */}
-      <ProductDescription />
+      <ProductDescription description={description} careText={careText} />
     </div>
   );
 }

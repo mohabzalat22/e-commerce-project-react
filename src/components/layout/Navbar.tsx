@@ -1,29 +1,33 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const { itemCount } = useCart();
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
       <nav className="flex items-center gap-6 text-xs tracking-widest text-gray-600 uppercase">
-        {["Womens", "Mens", "About", "Footwear & Extras"].map((item) => (
-          <a
-            key={item}
-            href="/"
-            className="hover:text-gray-900 transition-colors duration-200"
-          >
+        <Link
+          to="/products"
+          className="hover:text-gray-900 transition-colors duration-200"
+        >
+          Mens
+        </Link>
+        {["Womens", "About", "Footwear & Extras"].map((item) => (
+          <span key={item} className="text-gray-400 cursor-not-allowed">
             {item}
-          </a>
+          </span>
         ))}
       </nav>
 
-      <a
-        href="/"
+      <Link
+        to="/"
         className="text-2xl font-bold tracking-[0.35em] text-gray-900 uppercase absolute left-1/2 -translate-x-1/2"
       >
         Everlane
-      </a>
+      </Link>
 
       <div className="flex items-center gap-4 text-gray-700">
         <button className="hover:text-gray-900 transition" aria-label="Search">
@@ -66,6 +70,11 @@ export default function Navbar() {
             <line x1="3" y1="6" x2="21" y2="6" />
             <path d="M16 10a4 4 0 01-8 0" />
           </svg>
+          {itemCount > 0 ? (
+            <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-gray-900 px-1 text-[10px] text-white">
+              {itemCount > 99 ? "99+" : itemCount}
+            </span>
+          ) : null}
         </button>
       </div>
     </div>
