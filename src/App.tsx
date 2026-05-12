@@ -1,11 +1,11 @@
 import React from "react";
 import Layout from "./components/layout/Layout";
-import Home from "./pages/Home";
+import PLP from "./pages/PLP";
 
 function App() {
   return (
     <Layout>
-      <Home />
+      <PLP />
     </Layout>
   );
 }
