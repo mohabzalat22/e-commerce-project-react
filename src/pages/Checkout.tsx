@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import CheckoutAddressForm, {
   type ShippingFields,
@@ -12,6 +12,7 @@ import CheckoutOrderSummary, {
 import { formatMoney } from "../components/checkout/formatMoney";
 import { useCart } from "../context/CartContext";
 import { placeOrder } from "../services/api";
+import { sessionRequest } from "../services/authApi";
 
 const initialShipping: ShippingFields = {
   email: "",
@@ -40,6 +41,7 @@ function validateShipping(values: ShippingFields): Partial<
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { lines, subtotalCents, clear } = useCart();
   const [shipping, setShipping] = useState<ShippingFields>(initialShipping);
   const [errors, setErrors] = useState<
@@ -81,6 +83,13 @@ export default function Checkout() {
 
     setIsSubmitting(true);
     try {
+      const session = await sessionRequest();
+      if (!session.authenticated) {
+        toast.error("Please sign in to place an order.");
+        navigate("/login", { state: { from: location }, replace: true });
+        return;
+      }
+
       const placed = await placeOrder({
         shipping: {
           email: shipping.email.trim(),
@@ -122,7 +131,7 @@ export default function Checkout() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [clear, lines, shipping]);
+  }, [clear, lines, location, navigate, shipping]);
 
   if (orderId) {
     return (

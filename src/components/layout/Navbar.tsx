@@ -42,7 +42,11 @@ export default function Navbar() {
             <line x1="16.5" y1="16.5" x2="22" y2="22" />
           </svg>
         </button>
-        <button className="hover:text-gray-900 transition" aria-label="Account">
+        <Link
+          to="/profile"
+          className="hover:text-gray-900 transition"
+          aria-label="Profile"
+        >
           <svg
             className="w-5 h-5"
             fill="none"
@@ -53,7 +57,7 @@ export default function Navbar() {
             <circle cx="12" cy="8" r="4" />
             <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
           </svg>
-        </button>
+        </Link>
         <button
           className="hover:text-gray-900 transition relative"
           aria-label="Cart"

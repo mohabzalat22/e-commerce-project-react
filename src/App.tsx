@@ -16,6 +16,11 @@ import AttributesAdmin from "./admin/pages/AttributesAdmin";
 import UsersAdmin from "./admin/pages/UsersAdmin";
 import OrdersAdmin from "./admin/pages/OrdersAdmin";
 import OrderEditor from "./admin/pages/OrderEditor";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
+import RequireAdmin from "./components/auth/RequireAdmin";
+import RequireAuth from "./components/auth/RequireAuth";
 
 function App() {
   return (
@@ -28,7 +33,16 @@ function App() {
         toastOptions={{ duration: 4000 }}
       />
       <Routes>
-        <Route path="/admin/*" element={<AdminLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/admin/*"
+          element={
+            <RequireAdmin>
+              <AdminLayout />
+            </RequireAdmin>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="categories" element={<CategoriesAdmin />} />
           <Route path="products" element={<ProductsAdmin />} />
@@ -49,7 +63,15 @@ function App() {
                   <Route path="/products" element={<PLP />} />
                   <Route path="/product/:id" element={<PDP />} />
                   <Route path="/cart" element={<Cart />} />
-                  <Route path="/checkout" element={<Checkout />} />
+                  <Route
+                    path="/checkout"
+                    element={
+                      <RequireAuth>
+                        <Checkout />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route path="/profile" element={<Profile />} />
                 </Routes>
               </Layout>
             </CartProvider>
