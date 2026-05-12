@@ -29,7 +29,7 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-const STORAGE_KEY = "ecom_cart_v1";
+const STORAGE_KEY = "cart";
 
 function loadInitial(): CartLine[] {
   try {

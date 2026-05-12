@@ -26,7 +26,7 @@ export default function Navbar() {
         to="/"
         className="text-2xl font-bold tracking-[0.35em] text-gray-900 uppercase absolute left-1/2 -translate-x-1/2"
       >
-        Everlane
+        Mis Eagles
       </Link>
 
       <div className="flex items-center gap-4 text-gray-700">

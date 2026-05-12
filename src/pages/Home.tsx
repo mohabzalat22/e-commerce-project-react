@@ -66,12 +66,12 @@ export default function Home() {
         <h2 className="mb-8 text-center text-sm font-medium uppercase tracking-[0.25em] text-gray-800">
           Shop by Category
         </h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
+        <div className="flex flex-wrap justify-center gap-4">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               to={`/products?category_id=${cat.id}`}
-              className="group flex flex-col items-center gap-2"
+              className="group flex w-[calc(50%-0.5rem)] flex-col items-center gap-2 sm:w-[calc((100%-2rem)/3)] md:w-[calc((100%-5rem)/6)]"
             >
               <div className="aspect-[3/4] w-full overflow-hidden rounded-sm bg-gray-100">
                 <img

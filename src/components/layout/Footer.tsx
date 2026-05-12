@@ -90,7 +90,7 @@ export default function Footer() {
             ))}
           </div>
           <p className="text-[10px] text-gray-400">
-            © 2026 Everlane. All Rights Reserved.
+            © 2026 MIS EAGLES. All Rights Reserved.
           </p>
         </div>
       </div>
