@@ -7,7 +7,7 @@ export default function Navbar() {
   const { itemCount } = useCart();
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div className="max-w-shell mx-auto px-6 py-3 flex items-center justify-between">
       <nav className="flex items-center gap-6 text-xs tracking-widest text-gray-600 uppercase">
         <Link
           to="/products"

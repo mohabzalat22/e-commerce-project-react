@@ -161,7 +161,7 @@ export default function PLP() {
 
   return (
     <div className="min-h-screen bg-gray-100 py-10">
-      <div className="mx-auto max-w-7xl bg-white px-6 py-8 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-shell bg-white px-6 py-8 sm:px-8 lg:px-10">
         <header className="mb-8">
           <h1 className="text-sm tracking-widest text-gray-700">{heading}</h1>
         </header>

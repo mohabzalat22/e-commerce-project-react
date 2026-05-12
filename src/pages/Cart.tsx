@@ -13,7 +13,7 @@ export default function Cart() {
   const { lines, subtotalCents, setQuantity, removeLine } = useCart();
 
   return (
-    <div className="mx-auto max-w-7xl p-6">
+    <div className="mx-auto max-w-shell p-6">
       <h1 className="text-2xl font-semibold">Shopping Cart</h1>
 
       {lines.length === 0 ? (

@@ -62,7 +62,7 @@ export default function Home() {
 
   return (
     <div className="bg-white text-gray-900">
-      <section className="mx-auto max-w-6xl px-6 py-12">
+      <section className="mx-auto max-w-shell px-6 py-12">
         <h2 className="mb-8 text-center text-sm font-medium uppercase tracking-[0.25em] text-gray-800">
           Shop by Category
         </h2>
@@ -115,7 +115,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-14">
+      <section className="mx-auto max-w-shell px-6 py-14">
         <div className="mb-8 text-center">
           <h2 className="mb-1 text-sm font-semibold uppercase tracking-[0.25em] text-gray-800">
             Featured

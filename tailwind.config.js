@@ -1,15 +1,12 @@
-module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      maxWidth: {
+        /** Main app column (~1792px); wider than max-w-7xl (1280px) */
+        shell: "min(90%, 112rem)",
+      },
       boxShadow: {
         soft: "0 20px 50px -25px rgba(15, 23, 42, 0.35)",
       },

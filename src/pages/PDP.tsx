@@ -106,13 +106,13 @@ export default function PDP() {
 
   if (loading)
     return (
-      <div className="mx-auto flex max-w-7xl items-center justify-center px-6 py-10 text-gray-900">
+      <div className="mx-auto flex max-w-shell items-center justify-center px-6 py-10 text-gray-900">
         Loading...
       </div>
     );
   if (error || !product)
     return (
-      <div className="mx-auto max-w-7xl px-6 py-10 text-red-600">
+      <div className="mx-auto max-w-shell px-6 py-10 text-red-600">
         Error: {error ?? "Product not found"}
       </div>
     );
@@ -122,7 +122,7 @@ export default function PDP() {
   const sizes = ownSizes.length ? ownSizes : sizeFallback;
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-10 text-gray-900">
+    <div className="mx-auto max-w-shell px-6 py-10 text-gray-900">
       <ProductDetails
         images={galleryImages(product)}
         title={product.name}
