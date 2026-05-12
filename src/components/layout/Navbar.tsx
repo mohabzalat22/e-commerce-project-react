@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
       <nav className="flex items-center gap-6 text-xs tracking-widest text-gray-600 uppercase">
@@ -50,6 +53,7 @@ export default function Navbar() {
         <button
           className="hover:text-gray-900 transition relative"
           aria-label="Cart"
+          onClick={() => navigate("/cart")}
         >
           <svg
             className="w-5 h-5"
