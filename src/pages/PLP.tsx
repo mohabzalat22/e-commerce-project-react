@@ -4,7 +4,8 @@ import FilterSection from "../components/sections/plp/FilterSection";
 import ColorSwatches from "../components/sections/plp/ColorSwatches";
 import FilterOptionChips from "../components/sections/plp/FilterOptionChips";
 import ProductGrid from "../components/sections/plp/ProductGrid";
-import type { FilterableAttribute, PlProduct } from "../types/catalog";
+import { useTaxSettings } from "../context/TaxSettingsContext";
+import type { ApiProduct, FilterableAttribute } from "../types/catalog";
 import { mapApiProductToPlp } from "../types/catalog";
 import {
   fetchCategoryFilters,
@@ -39,7 +40,8 @@ export default function PLP() {
     [queryString],
   );
 
-  const [products, setProducts] = useState<PlProduct[]>([]);
+  const { taxEnabled, taxRatePercent } = useTaxSettings();
+  const [rawProducts, setRawProducts] = useState<ApiProduct[]>([]);
   const [categoryFilters, setCategoryFilters] = useState<
     { id: number; name: string }[]
   >([]);
@@ -83,7 +85,7 @@ export default function PLP() {
           fetchFilterableAttributes(categoryId),
         ]);
         if (!cancelled) {
-          setProducts(productsData.map(mapApiProductToPlp));
+          setRawProducts(productsData);
           setFilterableAttributes(attrsData);
           setError(null);
         }
@@ -103,6 +105,11 @@ export default function PLP() {
       cancelled = true;
     };
   }, [categoryId, selection]);
+
+  const products = useMemo(
+    () => rawProducts.map((product) => mapApiProductToPlp(product, taxEnabled, taxRatePercent)),
+    [rawProducts, taxEnabled, taxRatePercent],
+  );
 
   const heading = useMemo(() => {
     if (categoryId && categoryFilters.length) {

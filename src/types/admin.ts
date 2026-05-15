@@ -120,3 +120,9 @@ export type AdminOrderListPayload = {
   items: AdminOrder[];
   count: number;
 };
+
+export type AdminTaxSettings = {
+  tax_enabled: boolean;
+  tax_rate_percent: number;
+  tax_enabled_key: string;
+};

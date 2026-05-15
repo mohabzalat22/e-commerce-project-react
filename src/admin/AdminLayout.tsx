@@ -39,6 +39,9 @@ export default function AdminLayout() {
             <NavLink to="/admin/orders" className={linkClass}>
               Orders
             </NavLink>
+            <NavLink to="/admin/tax-settings" className={linkClass}>
+              Tax Settings
+            </NavLink>
           </nav>
           <div className="hidden sm:block mt-auto pt-6 border-t border-gray-200">
             <NavLink

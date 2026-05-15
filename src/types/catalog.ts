@@ -68,6 +68,7 @@ export type ApiProduct = {
   sku?: string | null;
   base_price: string | number;
   sale_price?: string | number | null;
+  price_after_tax?: string | number;
   stock_qty?: number;
   is_active?: boolean;
   category?: { id: number; name: string; slug?: string };
@@ -103,18 +104,32 @@ export function optionLabelToHex(label: string): string {
   return COLOR_HEX[key] ?? "#d1d5db";
 }
 
-export function formatPrice(
+function resolvePrice(
   base: string | number,
   sale?: string | number | null,
-): string {
+  taxEnabled = false,
+  taxRatePercent = 14,
+): number {
   const saleNum =
     sale !== undefined && sale !== null && sale !== "" ? Number(sale) : null;
   const baseNum = Number(base);
   const price = saleNum !== null && !Number.isNaN(saleNum) ? saleNum : baseNum;
+  if (!taxEnabled) {
+    return price;
+  }
+  return price * (1 + taxRatePercent / 100);
+}
+
+export function formatPrice(
+  base: string | number,
+  sale?: string | number | null,
+  taxEnabled = false,
+  taxRatePercent = 14,
+): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(price);
+  }).format(resolvePrice(base, sale, taxEnabled, taxRatePercent));
 }
 
 export function primaryImageUrlFromApi(product: ApiProduct): string {
@@ -140,11 +155,29 @@ function colorHexSwatches(product: ApiProduct): string[] {
   return ["#d1d5db"];
 }
 
-export function mapApiProductToPlp(product: ApiProduct): PlProduct {
+export function mapApiProductToPlp(
+  product: ApiProduct,
+  taxEnabled = false,
+  taxRatePercent = 14,
+): PlProduct {
+  // Prefer price_after_tax from API if available, otherwise calculate locally
+  const displayPrice =
+    product.price_after_tax !== undefined
+      ? product.price_after_tax
+      : resolvePrice(
+          product.base_price,
+          product.sale_price ?? null,
+          taxEnabled,
+          taxRatePercent,
+        );
+
   return {
     id: product.id,
     name: product.name,
-    price: formatPrice(product.base_price, product.sale_price ?? null),
+    price: new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(Number(displayPrice)),
     image: primaryImageUrlFromApi(product),
     colors: colorHexSwatches(product),
     isNew: product.id >= 6,
@@ -223,12 +256,20 @@ export function galleryImages(
     }));
 }
 
-export function unitPriceCents(product: ApiProduct): number {
-  const sale = product.sale_price;
-  const base = product.base_price;
-  const saleNum =
-    sale !== undefined && sale !== null && sale !== "" ? Number(sale) : null;
-  const baseNum = Number(base);
-  const price = saleNum !== null && !Number.isNaN(saleNum) ? saleNum : baseNum;
-  return Math.round(price * 100);
+export function unitPriceCents(
+  product: ApiProduct,
+  taxEnabled = false,
+  taxRatePercent = 14,
+): number {
+  // Prefer price_after_tax from API if available, otherwise calculate locally
+  const displayPrice =
+    product.price_after_tax !== undefined
+      ? product.price_after_tax
+      : resolvePrice(
+          product.base_price,
+          product.sale_price ?? null,
+          taxEnabled,
+          taxRatePercent,
+        );
+  return Math.round(Number(displayPrice) * 100);
 }

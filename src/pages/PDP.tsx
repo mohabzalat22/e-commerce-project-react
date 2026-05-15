@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductDetails from "../components/sections/pdp/ProductDetails";
-import RelatedProducts, {
-  type RelatedProductItem,
-} from "../components/sections/pdp/RelatedProducts";
+import RelatedProducts from "../components/sections/pdp/RelatedProducts";
 import { useCart } from "../context/CartContext";
+import { useTaxSettings } from "../context/TaxSettingsContext";
 import {
   fetchProduct,
   fetchRelatedProducts,
@@ -23,23 +22,15 @@ import {
   unitPriceCents,
 } from "../types/catalog";
 
-function mapRelated(api: ApiProduct[]): RelatedProductItem[] {
-  return api.map((p) => ({
-    id: p.id,
-    title: p.name,
-    price: formatPrice(p.base_price, p.sale_price ?? null),
-    img: primaryImageUrlFromApi(p),
-  }));
-}
-
 export default function PDP() {
   const { id: idParam } = useParams<{ id: string }>();
   const productId = idParam ? Number(idParam) : NaN;
 
   const { addLine } = useCart();
+  const { taxEnabled, taxRatePercent } = useTaxSettings();
 
   const [product, setProduct] = useState<ApiProduct | null>(null);
-  const [related, setRelated] = useState<RelatedProductItem[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<ApiProduct[]>([]);
   const [sizeFallback, setSizeFallback] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +54,7 @@ export default function PDP() {
           fetchSizeFilters(),
         ]);
         setProduct(p);
-        setRelated(mapRelated(rel));
+        setRelatedProducts(rel);
         setSizeFallback(sizes);
         setError(null);
       } catch (err) {
@@ -76,6 +67,23 @@ export default function PDP() {
 
     load();
   }, [idParam, productId]);
+
+  const related = useMemo(
+    () =>
+      relatedProducts.map((p) => ({
+        id: p.id,
+        title: p.name,
+        price:
+          p.price_after_tax !== undefined
+            ? new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(Number(p.price_after_tax))
+            : formatPrice(p.base_price, p.sale_price ?? null, taxEnabled, taxRatePercent),
+        img: primaryImageUrlFromApi(p),
+      })),
+    [relatedProducts, taxEnabled, taxRatePercent],
+  );
 
   useEffect(() => {
     if (!product) return;
@@ -97,7 +105,7 @@ export default function PDP() {
       productId: product.id,
       name: product.name,
       imageUrl: imgs[0]?.url ?? primaryImageUrlFromApi(product),
-      unitPriceCents: unitPriceCents(product),
+      unitPriceCents: unitPriceCents(product, taxEnabled, taxRatePercent),
       sizeLabel: selectedSize,
       colorLabel: selectedColor || "—",
       quantity: 1,
@@ -127,7 +135,19 @@ export default function PDP() {
         images={galleryImages(product)}
         title={product.name}
         subtitle={materialText(product)}
-        priceFormatted={formatPrice(product.base_price, product.sale_price ?? null)}
+        priceFormatted={
+          product.price_after_tax !== undefined
+            ? new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(Number(product.price_after_tax))
+            : formatPrice(
+                product.base_price,
+                product.sale_price ?? null,
+                taxEnabled,
+                taxRatePercent,
+              )
+        }
         colors={colors}
         sizes={sizes}
         selectedSize={selectedSize}

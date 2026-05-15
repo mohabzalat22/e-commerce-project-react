@@ -9,6 +9,7 @@ import type {
   AdminProduct,
   AdminProductEavRow,
   AdminProductImage,
+  AdminTaxSettings,
   AdminUserListPayload,
 } from "../types/admin";
 
@@ -249,6 +250,20 @@ export async function adminFetchUsers(): Promise<AdminUserListPayload> {
 
 export async function adminFetchOrders(): Promise<AdminOrderListPayload> {
   return get<AdminOrderListPayload>("/orders");
+}
+
+export async function adminFetchTaxSettings(): Promise<AdminTaxSettings> {
+  return get<AdminTaxSettings>("/settings/tax");
+}
+
+export async function adminUpdateTaxSettings(body: {
+  tax_enabled: boolean;
+}): Promise<AdminTaxSettings> {
+  const res = await apiClient.put<ApiEnvelope<AdminTaxSettings>>(
+    "/settings/tax",
+    body,
+  );
+  return unwrapData(res.data);
 }
 
 export async function adminFetchOrder(id: string): Promise<AdminOrder> {

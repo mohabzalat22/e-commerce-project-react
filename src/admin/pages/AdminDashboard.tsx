@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { useTaxSettings } from "../../context/TaxSettingsContext";
 import {
   adminFetchCategories,
   adminFetchEavAttributes,
@@ -17,6 +18,7 @@ export default function AdminDashboard() {
     users: number;
     orders: number;
   } | null>(null);
+  const { taxEnabled, taxRatePercent } = useTaxSettings();
 
   useEffect(() => {
     let cancelled = false;
@@ -63,6 +65,12 @@ export default function AdminDashboard() {
     { label: "EAV attributes", value: counts.attributes, to: "/admin/attributes" },
     { label: "Users", value: counts.users, to: "/admin/users" },
     { label: "Orders", value: counts.orders, to: "/admin/orders" },
+    {
+      label: "Tax settings",
+      value: taxEnabled ? "On" : "Off",
+      to: "/admin/tax-settings",
+      hint: `${taxRatePercent}% markup`,
+    },
   ];
 
   return (
@@ -73,7 +81,7 @@ export default function AdminDashboard() {
       <p className="mt-1 text-gray-600 text-sm">
         Overview of catalog entities backed by your ecom API.
       </p>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {cards.map((c) => (
           <Link
             key={c.label}
@@ -86,6 +94,9 @@ export default function AdminDashboard() {
             <div className="mt-2 text-3xl font-semibold text-gray-800 tabular-nums">
               {c.value}
             </div>
+            {"hint" in c ? (
+              <div className="mt-1 text-xs text-gray-500">{c.hint}</div>
+            ) : null}
           </Link>
         ))}
       </div>
